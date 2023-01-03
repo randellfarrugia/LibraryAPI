@@ -28,19 +28,25 @@ namespace LibraryAPI.Controllers
             return movieBL.GetAllMovies();
         }
 
-        [HttpGet("{genre}")]
-        public List<Movie> GetTop5RatedMoviesByGenre(string genre)
-        {
-            log.LogInformation($"Getting Top 5 Rated Movies for Genre - {genre}");
-            return movieBL.GetAllMovies().OrderByDescending(x => x.Rating).Where(x => x.Genre == genre).Take(5).ToList();
-        }
-
         // GET api/<MovieController>/5
         [HttpGet("{id}")]
         //[HttpGet()]
         public Movie Get(int id)
         {
             return movieBL.GetMovieByID(id);
+        }
+
+        [HttpGet("{genre}")]
+        public List<Movie> GetTop5RatedMoviesByGenre(string genre)
+        {
+            log.LogInformation($"Getting Top 5 Rated Movies for Genre - {genre}");
+            return movieBL.GetAllMovies().OrderByDescending(x => x.Rating).Where(x => x.Genre == genre).Take(5).ToList();
+        }
+               
+        [HttpPost()]
+        public async Task<Movie> GetMovieByName([FromBody] string name)
+        {
+            return await movieBL.GetMovieByName(name);
         }
 
         // POST api/<MovieController>

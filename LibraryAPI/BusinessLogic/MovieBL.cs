@@ -51,6 +51,12 @@ namespace LibraryAPI.BusinessLogic
             return IMDBURL;
         }
 
+        public async Task<Movie> GetMovieByName(string name)
+        {
+            DataRow row = dbHandler.GetMovieByName(name);
+            return utils.DataRowToObject<Movie>(row);
+        }
+
         public IActionResult InsertNewMovie(Movie movie)
         {
             int result = dbHandler.InsertNewMovie(movie);

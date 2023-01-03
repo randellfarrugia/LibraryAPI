@@ -37,6 +37,16 @@ namespace LibraryAPI.DataHandling
 
         }
 
+        public DataRow GetMovieByName(string name)
+        {
+            StringBuilder query = new StringBuilder();
+            List<KeyValuePair<string, object>> @params = new List<KeyValuePair<string, object>>();
+
+            query.Append("SELECT TOP(1) * FROM MOVIE (NOLOCK) WHERE Name=@Name");
+            @params.Add(new KeyValuePair<string, object>("@Name", name));
+            return connection.ExecuteQuery<DataRow>(query.ToString(), @params);
+        }
+
         public int InsertNewMovie(Movie movie)
         {
             StringBuilder query = new StringBuilder();
