@@ -39,7 +39,7 @@ namespace LibraryAPI.BusinessLogic
             var ApiToken = configuration.GetValue<string>("MovieDBAPIApiToken");
             var PostURL = configuration.GetValue<string>("MovieDBBaseURL") + $"3/search/movie?&language=en-US&query={movie}&api_key={ApiToken}";
 
-            var response = await posts.MakePostRequestAsync(PostURL, "","application/json",HttpMethod.Get);
+            var response = await posts.MakePostRequestAsync(PostURL, "", "application/json", HttpMethod.Get);
             var MovieObject = Newtonsoft.Json.JsonConvert.DeserializeObject<TheMovieDBResponse>(response);
 
             var ExternalMovieID = MovieObject?.results[0]?.id;
@@ -54,9 +54,9 @@ namespace LibraryAPI.BusinessLogic
         public IActionResult InsertNewMovie(Movie movie)
         {
             int result = dbHandler.InsertNewMovie(movie);
-            if (result > 0) 
+            if (result > 0)
             {
-                return new ContentResult() { Content = "{\"Result\":\"Movie Inserted Successfully\"}", ContentType="application/json",StatusCode = 200};
+                return new ContentResult() { Content = "{\"Result\":\"Movie Inserted Successfully\"}", ContentType = "application/json", StatusCode = 200 };
             }
             else
             {

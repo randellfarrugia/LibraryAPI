@@ -20,6 +20,7 @@ namespace LibraryAPI.Controllers
             movieBL = new MovieBL(_configuration, dbhandler, _context, _logger);
             configuration = _configuration;
             log = _logger;
+            log.
         }
 
         [HttpGet]

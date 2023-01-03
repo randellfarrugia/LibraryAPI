@@ -1,5 +1,7 @@
 ﻿using LibraryAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Text;
@@ -11,7 +13,7 @@ namespace LibraryAPI.DataHandling
         public SQLConnection connection;
         public Queries(IConfiguration configuration, SQLConnection _sqlConnection)
         {
-            connection = _sqlConnection;
+            connection = _sqlConnection;            
         }
 
         public DataTable GetAllMovies()
