@@ -37,6 +37,13 @@ namespace LibraryAPITests
         [SetUp]
         public void Setup()
         {
+           
+            var builder = new ConfigurationBuilder()
+                            .SetBasePath(Directory.GetCurrentDirectory())
+                            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+            _configurationMock = builder.Build();
+
             //var inMemorySettings = new Dictionary<string, string>
             //{
             //    {"MovieDBBaseURL", "https://api.themoviedb.org/"},
@@ -44,12 +51,6 @@ namespace LibraryAPITests
             //    {"IMDBBaseURL", "https://www.imdb.com/title/"},
             //    {"ConnectionStrings:LibraryDB", "Data Source=DESKTOP-PL5OMP5;Initial Catalog=LibraryDatabase;User ID=sa;Password=root;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"},
             //};
-
-            var builder = new ConfigurationBuilder()
-                            .SetBasePath(Directory.GetCurrentDirectory())
-                            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-
-            _configurationMock = builder.Build();
             //_configurationMock = new ConfigurationBuilder()
             //    .AddInMemoryCollection(inMemorySettings)
             //    .Build();

@@ -14,9 +14,6 @@ namespace LibraryAPI.Controllers
         public MovieBL movieBL;
         public ILogger log;
         IConfiguration configuration;
-        private IConfiguration configurationMock;
-        private Queries object1;
-        private IHttpContextAccessor object2;
 
         public MovieController(IConfiguration _configuration, Queries dbhandler, IHttpContextAccessor _context, ILogger<LogClass> _logger)
         {
