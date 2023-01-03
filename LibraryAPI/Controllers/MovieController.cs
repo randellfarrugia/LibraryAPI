@@ -3,7 +3,7 @@ using LibraryAPI.DataHandling;
 using LibraryAPI.Interfaces;
 using LibraryAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-
+using Serilog.Core;
 
 namespace LibraryAPI.Controllers
 {
@@ -12,12 +12,17 @@ namespace LibraryAPI.Controllers
     public class MovieController : ControllerBase
     {
         public MovieBL movieBL;
+        public ILogger log;
         IConfiguration configuration;
+        private IConfiguration configurationMock;
+        private Queries object1;
+        private IHttpContextAccessor object2;
 
-        public MovieController(IConfiguration _configuration, Queries dbhandler, IHttpContextAccessor _context)
+        public MovieController(IConfiguration _configuration, Queries dbhandler, IHttpContextAccessor _context, ILogger<LogClass> _logger)
         {
-            movieBL = new MovieBL(_configuration, dbhandler, _context);
+            movieBL = new MovieBL(_configuration, dbhandler, _context, _logger);
             configuration = _configuration;
+            log = _logger;
         }
 
         [HttpGet]
@@ -29,6 +34,7 @@ namespace LibraryAPI.Controllers
         [HttpGet("{genre}")]
         public List<Movie> GetTop5RatedMoviesByGenre(string genre)
         {
+            log.LogInformation($"Getting Top 5 Rated Movies for Genre - {genre}");
             return movieBL.GetAllMovies().OrderByDescending(x => x.Rating).Where(x => x.Genre == genre).Take(5).ToList();
         }
 

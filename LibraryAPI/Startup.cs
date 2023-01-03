@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 using LibraryAPI.DataHandling;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Serilog;
+using Serilog.Events;
 
 namespace LibraryAPI
 {
@@ -29,8 +31,9 @@ namespace LibraryAPI
             // Add the book service, which will be used to retrieve and manipulate books
             //services.AddScoped<IBookService, BookService>();
             services.AddScoped<ILibrary, Movie>();
-            services.AddSingleton(new Queries(Configuration, new SQLConnection(Configuration.GetConnectionString("LibraryDB"))));
+            services.AddSingleton(new Queries(Configuration, new SQLConnection(Configuration.GetConnectionString("LibraryDB"))));                   
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton(Log.Logger);
             //services.AddHttpContextAccessor();
 
             // Add the API and configure it to use JSON formatting and dependency injection
@@ -43,18 +46,24 @@ namespace LibraryAPI
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+
+            services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
         }
 
+        
+      
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -65,6 +74,21 @@ namespace LibraryAPI
             {
                 endpoints.MapControllers();
             });
+
+           
+
+            string Date = DateTime.Now.ToString("yyyy-MM-dd");
+
+            Log.Logger = new LoggerConfiguration()
+              .MinimumLevel.Information()
+              .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+              .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Error)
+              .Enrich.FromLogContext()
+              .WriteTo.File(@"logs\" + Date + "\\log-.txt", rollingInterval: RollingInterval.Hour)             //LIVE
+            //.WriteTo.File(@"../../../logs\" + Date + "\\log-.txt", rollingInterval: RollingInterval.Hour)   //TESTING
+              .CreateLogger();
+
+            Log.Information("Application Starting");
         }
     }
 }

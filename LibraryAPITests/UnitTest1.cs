@@ -1,4 +1,5 @@
 using Castle.Core.Configuration;
+//using Castle.Core.Logging;
 using LibraryAPI;
 using LibraryAPI.BusinessLogic;
 using LibraryAPI.Controllers;
@@ -7,8 +8,10 @@ using LibraryAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Serilog;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -23,14 +26,17 @@ namespace LibraryAPITests
         private Mock<SQLConnection> _sqlConnectionMock;
         private Mock<Queries> _dbHandlerMock;
         private Mock<IHttpContextAccessor> _contextMock;
+        private Mock<ILogger<LogClass>> _logMock;
         private MovieController _movieController;
         private MovieBL _movieBL;
         private Utilities utils;
 
+
+
+
         [SetUp]
         public void Setup()
         {
-
             var inMemorySettings = new Dictionary<string, string>
             {
                 {"MovieDBBaseURL", "https://api.themoviedb.org/"},
@@ -38,16 +44,16 @@ namespace LibraryAPITests
                 {"IMDBBaseURL", "https://www.imdb.com/title/"},
                 {"ConnectionStrings:LibraryDB", "Data Source=DESKTOP-PL5OMP5;Initial Catalog=LibraryDatabase;User ID=sa;Password=root;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"},
             };
-
             _configurationMock = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)
                 .Build();
 
+            _logMock = new Mock<ILogger<LogClass>>();
             _sqlConnectionMock = new Mock<SQLConnection>(_configurationMock.GetConnectionString("LibraryDB"));
             _dbHandlerMock = new Mock<Queries>(_configurationMock, _sqlConnectionMock.Object);
             _contextMock = new Mock<IHttpContextAccessor>();
-            _movieBL = new MovieBL(_configurationMock, _dbHandlerMock.Object, _contextMock.Object);
-            _movieController = new MovieController(_configurationMock, _dbHandlerMock.Object, _contextMock.Object);
+            _movieBL = new MovieBL(_configurationMock, _dbHandlerMock.Object, _contextMock.Object, _logMock.Object);
+            _movieController = new MovieController(_configurationMock, _dbHandlerMock.Object, _contextMock.Object, _logMock.Object);
             utils = new Utilities();
         }
 

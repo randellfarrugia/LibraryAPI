@@ -3,6 +3,7 @@ using LibraryAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using Newtonsoft.Json;
+using LibraryAPI.Controllers;
 
 namespace LibraryAPI.BusinessLogic
 {
@@ -11,11 +12,14 @@ namespace LibraryAPI.BusinessLogic
         public Queries dbHandler;
         public Utilities utils;
         public Posts posts;
-        public MovieBL(IConfiguration configuration, Queries _dbhandler, IHttpContextAccessor _context)
+        public ILogger log;
+
+        public MovieBL(IConfiguration configuration, Queries _dbhandler, IHttpContextAccessor _context, ILogger<LogClass> _logger)
         {
             dbHandler = _dbhandler;
             utils = new Utilities();
             posts = new Posts(_context);
+            log = _logger;
         }
 
         public List<Movie> GetAllMovies()
