@@ -33,7 +33,7 @@ namespace LibraryAPI
             services.AddScoped<ILibrary, Movie>();
             services.AddSingleton(new Queries(Configuration, new SQLConnection(Configuration.GetConnectionString("LibraryDB"))));                   
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton(Log.Logger);
+            //services.AddSingleton(Log.Logger); //not needed
             //services.AddHttpContextAccessor();
 
             // Add the API and configure it to use JSON formatting and dependency injection
@@ -84,7 +84,7 @@ namespace LibraryAPI
               .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
               .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Error)
               .Enrich.FromLogContext()
-              .WriteTo.File(@"logs\" + Date + "\\log-.txt", rollingInterval: RollingInterval.Hour)             //LIVE
+              .WriteTo.File(@"Logs\" + Date + "\\log-.txt", rollingInterval: RollingInterval.Hour)             //LIVE
             //.WriteTo.File(@"../../../logs\" + Date + "\\log-.txt", rollingInterval: RollingInterval.Hour)   //TESTING
               .CreateLogger();
 

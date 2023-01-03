@@ -37,16 +37,22 @@ namespace LibraryAPITests
         [SetUp]
         public void Setup()
         {
-            var inMemorySettings = new Dictionary<string, string>
-            {
-                {"MovieDBBaseURL", "https://api.themoviedb.org/"},
-                {"MovieDBAPIApiToken", "66eb3bde9cca0487f03e78b512b451e4"},
-                {"IMDBBaseURL", "https://www.imdb.com/title/"},
-                {"ConnectionStrings:LibraryDB", "Data Source=DESKTOP-PL5OMP5;Initial Catalog=LibraryDatabase;User ID=sa;Password=root;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"},
-            };
-            _configurationMock = new ConfigurationBuilder()
-                .AddInMemoryCollection(inMemorySettings)
-                .Build();
+            //var inMemorySettings = new Dictionary<string, string>
+            //{
+            //    {"MovieDBBaseURL", "https://api.themoviedb.org/"},
+            //    {"MovieDBAPIApiToken", "66eb3bde9cca0487f03e78b512b451e4"},
+            //    {"IMDBBaseURL", "https://www.imdb.com/title/"},
+            //    {"ConnectionStrings:LibraryDB", "Data Source=DESKTOP-PL5OMP5;Initial Catalog=LibraryDatabase;User ID=sa;Password=root;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"},
+            //};
+
+            var builder = new ConfigurationBuilder()
+                            .SetBasePath(Directory.GetCurrentDirectory())
+                            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+            _configurationMock = builder.Build();
+            //_configurationMock = new ConfigurationBuilder()
+            //    .AddInMemoryCollection(inMemorySettings)
+            //    .Build();
 
             _logMock = new Mock<ILogger<LogClass>>();
             _sqlConnectionMock = new Mock<SQLConnection>(_configurationMock.GetConnectionString("LibraryDB"));
