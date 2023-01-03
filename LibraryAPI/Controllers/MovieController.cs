@@ -40,7 +40,7 @@ namespace LibraryAPI.Controllers
         public List<Movie> GetTop5RatedMoviesByGenre(string genre)
         {
             log.LogInformation($"Getting Top 5 Rated Movies for Genre - {genre}");
-            return movieBL.GetAllMovies().OrderByDescending(x => x.Rating).Where(x => x.Genre == genre).Take(5).ToList();
+            return movieBL.GetAllMovies().OrderByDescending(x => x.Rating).Where(x => string.Equals(x.Genre,genre,StringComparison.OrdinalIgnoreCase)).Take(5).ToList();
         }
                
         [HttpPost()]
